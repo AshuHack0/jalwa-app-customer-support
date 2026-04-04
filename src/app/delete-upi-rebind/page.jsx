@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import apiClient from '@/lib/utils/apiClient'
 
 export default function Page() {
   const router = useRouter()
@@ -86,7 +86,7 @@ export default function Page() {
       data.append('oldUpiSelfie', oldUpiSelfie)
       data.append('idSelfie', idSelfie)
 
-      await axios.post('/api/delete-upi-rebind', data)
+      await apiClient.post('/customer-support/delete-upi-rebind', data)
 
       alert('Submitted successfully')
     } catch (e) {

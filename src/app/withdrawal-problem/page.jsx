@@ -9,7 +9,7 @@ import {
   Image as ImageIcon
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import apiClient from '@/lib/utils/apiClient'
 
 export default function BankStatementForm() {
   const router = useRouter()
@@ -49,7 +49,7 @@ export default function BankStatementForm() {
       data.append('orderId', formData.orderId)
       data.append('bankStatement', pdfFile)
 
-      await axios.post('/api/submit-statement', data)
+      await apiClient.post('/customer-support/submit-statement', data)
 
       alert('Statement submitted successfully!')
     } catch (err) {

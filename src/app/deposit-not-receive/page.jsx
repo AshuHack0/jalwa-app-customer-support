@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import apiClient from '@/lib/utils/apiClient'
 
 export default function DepositIssueForm() {
   const router = useRouter()
@@ -45,7 +45,7 @@ export default function DepositIssueForm() {
       data.append('orderId', formData.orderId)
       data.append('receipt', receiptImage)
 
-      await axios.post('/api/deposit-report', data, {
+      await apiClient.post('/customer-support/deposit-report', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 

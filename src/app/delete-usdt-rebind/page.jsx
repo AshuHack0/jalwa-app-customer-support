@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import apiClient from '@/lib/utils/apiClient'
 
 // Moved outside to prevent "Cannot create components during render" error
 const UploadBox = ({ type, label, hasError, previews, handleFile }) => (
@@ -47,38 +48,41 @@ export default function DeleteUSDTAddress() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  const [previews, setPreviews] = useState({
-    selfieUsdt: null,
-    selfieId: null,
-    receipt: null
-  })
-
-  const [errors, setErrors] = useState({
-    selfieUsdt: false,
-    selfieId: false,
-    receipt: false
-  })
+  const [previews, setPreviews] = useState({ selfieUsdt: null, selfieId: null, receipt: null })
+  const [files, setFiles] = useState({ selfieUsdt: null, selfieId: null, receipt: null })
+  const [errors, setErrors] = useState({ selfieUsdt: false, selfieId: false, receipt: false })
 
   const handleFile = (e, type) => {
     const file = e.target.files[0]
     if (!file) return
-    const url = URL.createObjectURL(file)
-    setPreviews((prev) => ({ ...prev, [type]: url }))
+    setFiles((prev) => ({ ...prev, [type]: file }))
+    setPreviews((prev) => ({ ...prev, [type]: URL.createObjectURL(file) }))
     setErrors((prev) => ({ ...prev, [type]: false }))
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = {
       selfieUsdt: !previews.selfieUsdt,
       selfieId: !previews.selfieId,
       receipt: !previews.receipt
     }
     setErrors(newErrors)
-
     if (Object.values(newErrors).some((v) => v)) return
 
     setLoading(true)
-    setTimeout(() => setLoading(false), 2000)
+    try {
+      const data = new FormData()
+      data.append('selfieUsdt', files.selfieUsdt)
+      data.append('selfieId', files.selfieId)
+      data.append('receipt', files.receipt)
+
+      await apiClient.post('/customer-support/delete-usdt-rebind', data)
+      alert('Submitted successfully')
+    } catch {
+      alert('Submission failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
