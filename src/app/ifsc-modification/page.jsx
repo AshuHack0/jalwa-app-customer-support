@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { ChevronLeft, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import apiClient from '@/lib/utils/apiClient'
 
 export default function IFSCModification() {
   const router = useRouter()
@@ -39,7 +39,7 @@ export default function IFSCModification() {
 
     setLoading(true)
     try {
-      const response = await axios.post('/api/modify-ifsc', formData)
+      const response = await apiClient.post('/customer-support/modify-ifsc', formData)
       console.log('Success:', response.data)
       alert('Modified Successfully!')
     } catch (error) {

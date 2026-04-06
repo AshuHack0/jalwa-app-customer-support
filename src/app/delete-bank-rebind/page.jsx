@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import apiClient from '@/lib/utils/apiClient'
 import Image from 'next/image'
 
 export default function Page() {
@@ -78,7 +78,7 @@ export default function Page() {
       data.append('passbook', passbook)
       data.append('receipt', receipt)
 
-      await axios.post('/api/delete-withdraw-bank', data)
+      await apiClient.post('/customer-support/delete-withdraw-bank', data)
 
       alert('Submitted successfully')
     } catch (e) {

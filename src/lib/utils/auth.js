@@ -1,11 +1,18 @@
 export const isAuthenticated = () => {
   if (typeof window === 'undefined') return false
 
-  localStorage.setItem(
-    'authToken',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTcxMDAwMDAwMCwiZXhwIjoxNzEwMDAzNjAwfQ.kd93Jf8kL1fTQx5W7y2yN8G0rZc4pQmL6sT9vH2pXbA'
-  )
+  // Read token from URL query params and persist to localStorage
+  const params = new URLSearchParams(window.location.search)
+  const urlToken = params.get('token')
+  if (urlToken) {
+    localStorage.setItem('authToken', urlToken)
+  }
 
   const token = localStorage.getItem('authToken')
   return !!token
+}
+
+export const getToken = () => {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem('authToken')
 }

@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { ChevronLeft, ChevronRight, Loader2, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { bankOptions } from '@/lib/data/bankOptions.js'
+import apiClient from '@/lib/utils/apiClient'
 
 export default function ChangeBankName() {
   const router = useRouter()
@@ -28,15 +29,23 @@ export default function ChangeBankName() {
     )
   }, [searchQuery])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = {
       bankName: !formData.bankName,
       bankNumber: !formData.bankNumber
     }
     setErrors(newErrors)
     if (newErrors.bankName || newErrors.bankNumber) return
+
     setLoading(true)
-    setTimeout(() => setLoading(false), 2000)
+    try {
+      await apiClient.post('/customer-support/change-bank-name', formData)
+      alert('Submitted successfully')
+    } catch {
+      alert('Submission failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

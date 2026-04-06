@@ -9,7 +9,7 @@ import {
   EyeOff
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
+import apiClient from '@/lib/utils/apiClient'
 import Image from 'next/image'
 
 export default function Page() {
@@ -88,7 +88,7 @@ export default function Page() {
       data.append('identitySelfie', identitySelfie)
       data.append('passbookSelfie', passbookSelfie)
 
-      await axios.post('/api/change-login-password', data)
+      await apiClient.post('/customer-support/change-login-password', data)
 
       alert('Submitted successfully')
     } catch (e) {
