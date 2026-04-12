@@ -1,13 +1,16 @@
 'use client'
 
 import React from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function ProgressButton({ isAuth }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
 
   const handleNavigation = () => {
-    router.push(`${isAuth ? '/Progress-Query' : '/Progress-Query-UnAuth'}`)
+    const base = isAuth ? '/Progress-Query' : '/Progress-Query-UnAuth'
+    router.push(token ? `${base}?token=${token}` : base)
   }
 
   return (

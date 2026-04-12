@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react'
+'use client'
+
+import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import { selfServiceItems } from '@/lib/data/selfServiceItems.js'
+import { useSearchParams } from 'next/navigation'
 
 export default function SelfServiceList({ isAuth }) {
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
+
+  const withToken = (path) =>
+    token ? `${path}?token=${token}` : path
+
   return (
     <div className="px-4 py-2 w-full">
       {/* Title */}
@@ -16,7 +25,7 @@ export default function SelfServiceList({ isAuth }) {
       {isAuth && (
         <div className="overflow-hidden">
           {selfServiceItems.map((item, index) => (
-            <Link key={item.id} href={item.link} className="block">
+            <Link key={item.id} href={withToken(item.link)} className="block">
               <div
                 className={`flex items-center justify-between w-full p-3 md:p-4 transition-colors bg-white hover:bg-slate-50 active:bg-slate-100 ${
                   index !== selfServiceItems.length - 1

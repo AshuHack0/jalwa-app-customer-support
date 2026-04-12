@@ -1,14 +1,21 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Home } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 export default function TopNavbar() {
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
+  const homeHref = token ? `/?token=${token}` : '/'
+
   return (
     <nav className="flex items-center justify-between w-full px-8 py-2 bg-[#f7f8ff]">
       <div className="flex items-center">
         <Link
-          href="/"
+          href={homeHref}
           className="p-2 transition-all hover:bg-blue-100/40 rounded-full"
         >
           <Home size={24} strokeWidth={1.6} />
