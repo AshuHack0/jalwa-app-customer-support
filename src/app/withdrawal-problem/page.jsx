@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import {
   ChevronLeft,
   FileText,
@@ -8,11 +8,13 @@ import {
   X,
   Image as ImageIcon
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import apiClient from '@/lib/utils/apiClient'
 
-export default function BankStatementForm() {
+function BankStatementForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
   const [loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({ userId: '', orderId: '' })
@@ -52,6 +54,7 @@ export default function BankStatementForm() {
       await apiClient.post('/customer-support/submit-statement', data)
 
       alert('Statement submitted successfully!')
+      router.push(token ? `/?token=${token}` : '/')
     } catch (err) {
       alert('Submission failed.')
     } finally {
@@ -190,5 +193,13 @@ export default function BankStatementForm() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <BankStatementForm />
+    </Suspense>
   )
 }

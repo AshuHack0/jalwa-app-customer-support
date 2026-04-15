@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import {
   ChevronLeft,
   Image as ImageIcon,
@@ -8,12 +8,14 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import apiClient from '@/lib/utils/apiClient'
 import Image from 'next/image'
 
-export default function Page() {
+function ChangePasswordForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
 
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -91,6 +93,7 @@ export default function Page() {
       await apiClient.post('/customer-support/change-login-password', data)
 
       alert('Submitted successfully')
+      router.push(token ? `/?token=${token}` : '/')
     } catch (e) {
       alert('Submission failed')
     } finally {
@@ -214,5 +217,13 @@ export default function Page() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <ChangePasswordForm />
+    </Suspense>
   )
 }

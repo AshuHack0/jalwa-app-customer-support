@@ -12,6 +12,8 @@ function DepositIssueForm() {
 
   const [formData, setFormData] = useState({ userId: '', orderId: '' })
 
+  const token = searchParams.get('token')
+
   useEffect(() => {
     const userId = searchParams.get('userId')
     const orderNumber = searchParams.get('orderNumber')
@@ -62,6 +64,7 @@ function DepositIssueForm() {
       })
 
       alert('Request submitted successfully!')
+      router.push(token ? `/?token=${token}` : '/')
     } catch (err) {
       console.error(err)
       alert('Submission failed.')

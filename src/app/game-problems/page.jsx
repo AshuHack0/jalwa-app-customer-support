@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { ChevronLeft, FolderOpen, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
-export default function GameProblems() {
+function GameProblems() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
   const [loading, setLoading] = useState(false)
   const [content, setContent] = useState('')
   const [preview, setPreview] = useState(null)
@@ -27,7 +29,10 @@ export default function GameProblems() {
     setError(false)
     setLoading(true)
     // Simulate API call
-    setTimeout(() => setLoading(false), 2000)
+    setTimeout(() => {
+      setLoading(false)
+      router.push(token ? `/?token=${token}` : '/')
+    }, 2000)
   }
 
   return (
@@ -118,5 +123,13 @@ export default function GameProblems() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <GameProblems />
+    </Suspense>
   )
 }

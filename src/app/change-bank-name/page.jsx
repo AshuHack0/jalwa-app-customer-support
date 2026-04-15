@@ -1,13 +1,15 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, Suspense } from 'react'
 import { ChevronLeft, ChevronRight, Loader2, Search } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { bankOptions } from '@/lib/data/bankOptions.js'
 import apiClient from '@/lib/utils/apiClient'
 
-export default function ChangeBankName() {
+function ChangeBankName() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
   const [loading, setLoading] = useState(false)
   const [showBankPicker, setShowBankPicker] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -41,6 +43,7 @@ export default function ChangeBankName() {
     try {
       await apiClient.post('/customer-support/change-bank-name', formData)
       alert('Submitted successfully')
+      router.push(token ? `/?token=${token}` : '/')
     } catch {
       alert('Submission failed')
     } finally {
@@ -190,5 +193,13 @@ export default function ChangeBankName() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <ChangeBankName />
+    </Suspense>
   )
 }

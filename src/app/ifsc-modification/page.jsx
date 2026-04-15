@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { ChevronLeft, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import apiClient from '@/lib/utils/apiClient'
 
-export default function IFSCModification() {
+function IFSCModification() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
 
   // Form State
   const [formData, setFormData] = useState({ ifsc: '', bankNumber: '' })
@@ -42,6 +44,7 @@ export default function IFSCModification() {
       const response = await apiClient.post('/customer-support/modify-ifsc', formData)
       console.log('Success:', response.data)
       alert('Modified Successfully!')
+      router.push(token ? `/?token=${token}` : '/')
     } catch (error) {
       console.error('API Error:', error)
       alert('Something went wrong. Please try again.')
@@ -126,5 +129,13 @@ export default function IFSCModification() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <IFSCModification />
+    </Suspense>
   )
 }

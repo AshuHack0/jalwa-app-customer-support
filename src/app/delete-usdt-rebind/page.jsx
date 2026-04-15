@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import apiClient from '@/lib/utils/apiClient'
 
@@ -44,8 +44,10 @@ const UploadBox = ({ type, label, hasError, previews, handleFile }) => (
   </div>
 )
 
-export default function DeleteUSDTAddress() {
+function DeleteUSDTAddress() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
   const [loading, setLoading] = useState(false)
 
   const [previews, setPreviews] = useState({ selfieUsdt: null, selfieId: null, receipt: null })
@@ -78,6 +80,7 @@ export default function DeleteUSDTAddress() {
 
       await apiClient.post('/customer-support/delete-usdt-rebind', data)
       alert('Submitted successfully')
+      router.push(token ? `/?token=${token}` : '/')
     } catch {
       alert('Submission failed')
     } finally {
@@ -138,5 +141,13 @@ export default function DeleteUSDTAddress() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <DeleteUSDTAddress />
+    </Suspense>
   )
 }
