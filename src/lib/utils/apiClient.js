@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getToken } from './auth'
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
+  baseURL: "https://api.indgames.online/api/v1",
 })
 
 apiClient.interceptors.request.use((config) => {
