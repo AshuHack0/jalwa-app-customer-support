@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import apiClient from '@/lib/utils/apiClient'
 
-export default function DepositIssueForm() {
+function DepositIssueForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
@@ -189,5 +189,13 @@ export default function DepositIssueForm() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <DepositIssueForm />
+    </Suspense>
   )
 }
