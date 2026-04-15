@@ -1,15 +1,27 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChevronLeft, Image as ImageIcon, Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import apiClient from '@/lib/utils/apiClient'
 
 export default function DepositIssueForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
 
   const [formData, setFormData] = useState({ userId: '', orderId: '' })
+
+  useEffect(() => {
+    const userId = searchParams.get('userId')
+    const orderNumber = searchParams.get('orderNumber')
+    if (userId || orderNumber) {
+      setFormData({
+        userId: userId || '',
+        orderId: orderNumber || '',
+      })
+    }
+  }, [searchParams])
   const [receiptImage, setReceiptImage] = useState(null)
   const [preview, setPreview] = useState(null)
   const [errors, setErrors] = useState({})
@@ -90,6 +102,7 @@ export default function DepositIssueForm() {
           <input
             type="text"
             placeholder="Please enter User ID"
+            value={formData.userId}
             className={`w-full p-4 bg-white rounded-xl shadow-sm border-none outline-none focus:ring-1 focus:ring-blue-100 transition-all ${
               errors.userId ? 'ring-1 ring-red-400' : ''
             }`}
@@ -111,6 +124,7 @@ export default function DepositIssueForm() {
           <input
             type="text"
             placeholder="Please enter Order ID"
+            value={formData.orderId}
             className={`w-full p-4 bg-white rounded-xl shadow-sm border-none outline-none focus:ring-1 focus:ring-blue-100 transition-all ${
               errors.orderId ? 'ring-1 ring-red-400' : ''
             }`}
